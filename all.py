@@ -210,8 +210,8 @@ unittest.TextTestRunner().run(suite)
 import sys
 
 ### Set the hyperparameters here ###
-iterations = 550
-learning_rate = 0.2
+iterations = 1600
+learning_rate = 0.8
 hidden_nodes = 12
 output_nodes = 1
 
@@ -224,6 +224,8 @@ for ii in range(iterations):
     batch = np.random.choice(train_features.index, size=128)
     X, y = train_features.ix[batch].values, train_targets.ix[batch]['cnt']
     network.train(X, y)
+    if ii % 80 == 0:
+        learning_rate *= .85
 
     # Printing out the training progress
     train_loss = MSE(network.run(train_features).T, train_targets['cnt'].values)
