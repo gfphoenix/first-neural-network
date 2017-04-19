@@ -112,13 +112,16 @@ class NeuralNetwork(object):
             hidden_error_term = hidden_outputs*(1.0-hidden_outputs) * hidden_error
 
             # Weight step (input to hidden)
-            delta_weights_i_h = X[:,None] * hidden_error_term
+            delta_weights_i_h += X[:,None] * hidden_error_term
             # Weight step (hidden to output)
-            delta_weights_h_o = hidden_outputs[:,None] * output_error_term
+            delta_weights_h_o += hidden_outputs[:,None] * output_error_term
 
             # TODO: Update the weights - Replace these values with your calculations.
-            self.weights_hidden_to_output += self.lr * delta_weights_h_o # update hidden-to-output weights with gradient descent step
-            self.weights_input_to_hidden += self.lr * delta_weights_i_h # update input-to-hidden weights with gradient descent step
+            #self.weights_hidden_to_output += self.lr * hidden_outputs[:,None] * output_error_term # update hidden-to-output weights with gradient descent step
+            #self.weights_input_to_hidden += self.lr * X[:,None] * hidden_error_term # update input-to-hidden weights with gradient descent step
+
+        self.weights_hidden_to_output += self.lr * delta_weights_h_o / n_records # update hidden-to-output weights with gradient descent step
+        self.weights_input_to_hidden += self.lr * delta_weights_i_h / n_records # update input-to-hidden weights with gradient descent step
 
     def run(self, features):
         ''' Run a forward pass through the network with input features
@@ -207,9 +210,9 @@ unittest.TextTestRunner().run(suite)
 import sys
 
 ### Set the hyperparameters here ###
-iterations = 300
-learning_rate = 0.05
-hidden_nodes = 13
+iterations = 550
+learning_rate = 0.2
+hidden_nodes = 12
 output_nodes = 1
 
 N_i = train_features.shape[1]
